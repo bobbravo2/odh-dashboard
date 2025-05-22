@@ -270,6 +270,7 @@ jobs:
         run: |
           mkdir -p ./coverage/report
           npx nyc report --reporter=html --reporter=text-summary --temp-directory ./coverage -t ./coverage --report-dir ./coverage/report
+          npx nyc check-coverage --lines 70 --functions 70 --branches 70 --statements 70 --temp-directory ./coverage
           cp ./coverage/unit-coverage-final.json ./coverage/combined-coverage-final.json || true
       - name: Upload combined results
         uses: actions/upload-artifact@v4
