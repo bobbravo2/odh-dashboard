@@ -2,7 +2,7 @@ name: Apply PR Image Expiry Label
 
 on:
   pull_request:
-    types: [opened, reopened, synchronize]
+    types: [closed]
   workflow_dispatch: {}
 
 permissions:
