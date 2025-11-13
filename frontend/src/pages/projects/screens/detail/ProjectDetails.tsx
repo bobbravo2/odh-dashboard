@@ -39,7 +39,6 @@ import StorageList from './storage/StorageList';
 import ConnectionsList from './connections/ConnectionsList';
 import PipelinesSection from './pipelines/PipelinesSection';
 import ProjectActions from './ProjectActions';
-import RagChatbot from './chatbot/RagChatbot';
 
 import './ProjectDetails.scss';
 
@@ -50,6 +49,7 @@ const ProjectDetails: React.FC = () => {
   const biasMetricsAreaAvailable = useIsAreaAvailable(SupportedArea.BIAS_METRICS).status;
   const projectSharingEnabled = useIsAreaAvailable(SupportedArea.DS_PROJECTS_PERMISSIONS).status;
   const pipelinesEnabled = useIsAreaAvailable(SupportedArea.DS_PIPELINES).status;
+  const featureStoreEnabled = useIsAreaAvailable(SupportedArea.FEATURE_STORE).status;
   const deploymentsTab = useDeploymentsTab();
   const [searchParams, setSearchParams] = useSearchParams();
   const state = searchParams.get('section');
@@ -57,7 +57,6 @@ const ProjectDetails: React.FC = () => {
   const [allowCreate, rbacLoaded] = useProjectPermissionsTabVisible(currentProject.metadata.name);
 
   const workbenchEnabled = useIsAreaAvailable(SupportedArea.WORKBENCHES).status;
-  const chatBotEnabled = useIsAreaAvailable(SupportedArea.LLAMA_STACK_CHAT_BOT).status;
 
   useCheckLogoutParams();
 
@@ -148,15 +147,6 @@ const ProjectDetails: React.FC = () => {
         sections={React.useMemo(
           () => [
             { id: ProjectSectionID.OVERVIEW, title: 'Overview', component: <ProjectOverview /> },
-            ...(chatBotEnabled
-              ? [
-                  {
-                    id: ProjectSectionID.CHATBOT,
-                    title: 'Chatbot',
-                    component: <RagChatbot />,
-                  },
-                ]
-              : []),
             ...(workbenchEnabled
               ? [
                   {
@@ -186,11 +176,15 @@ const ProjectDetails: React.FC = () => {
               title: 'Connections',
               component: <ConnectionsList />,
             },
-            {
-              id: ProjectSectionID.FEATURE_STORE,
-              title: 'Feature store integration',
-              component: <FeatureStoreIntegration />,
-            },
+            ...(featureStoreEnabled
+              ? [
+                  {
+                    id: ProjectSectionID.FEATURE_STORE,
+                    title: 'Feature store integration',
+                    component: <FeatureStoreIntegration />,
+                  },
+                ]
+              : []),
             ...(projectSharingEnabled && allowCreate
               ? [
                   {
@@ -213,11 +207,11 @@ const ProjectDetails: React.FC = () => {
           [
             allowCreate,
             biasMetricsAreaAvailable,
+            featureStoreEnabled,
             pipelinesEnabled,
             projectSharingEnabled,
             workbenchEnabled,
             deploymentsTab,
-            chatBotEnabled,
           ],
         )}
       />
