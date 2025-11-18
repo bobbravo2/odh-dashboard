@@ -48,11 +48,11 @@ type ConnectionMetrics = {
 const activeConnections = new Map<string, ConnectionMetrics>();
 
 // Constants for connection management
-const CONNECTION_TIMEOUT_MS = 10000; // 10 seconds to establish connection
-const HEARTBEAT_INTERVAL_MS = 15000; // 15 seconds between heartbeats
-const INACTIVITY_WARNING_MS = 30000; // Warn if no messages for 30 seconds
-const MESSAGE_QUEUE_LIMIT = 1000; // Max queued messages per connection
-const STALE_CONNECTION_MS = 300000; // 5 minutes of inactivity
+export const CONNECTION_TIMEOUT_MS = 10000; // 10 seconds to establish connection
+export const HEARTBEAT_INTERVAL_MS = 15000; // 15 seconds between heartbeats
+export const INACTIVITY_WARNING_MS = 30000; // Warn if no messages for 30 seconds
+export const MESSAGE_QUEUE_LIMIT = 1000; // Max queued messages per connection
+export const STALE_CONNECTION_MS = 300000; // 5 minutes of inactivity
 
 // Periodic cleanup of stale connections
 const cleanupStaleConnections = (fastify: KubeFastifyInstance) => {
@@ -188,12 +188,19 @@ export default async (fastify: KubeFastifyInstance): Promise<void> => {
         };
 
         // Close both connections and log diagnostics
-        const close = (code: number, reason: string) => {
+        const close = (code: number, reason: string | Buffer) => {
+          // Make idempotent - only run once per connection
+          if (!activeConnections.has(connectionId)) {
+            return;
+          }
+
+          const reasonString = typeof reason === 'string' ? reason : String(reason);
+
           fastify.log.info(
             {
               connectionId,
               code,
-              reason,
+              reason: reasonString,
               duration: Date.now() - metrics.created,
               messagesReceived: metrics.messagesReceived,
               messagesSent: metrics.messagesSent,
@@ -365,16 +372,18 @@ export default async (fastify: KubeFastifyInstance): Promise<void> => {
         });
 
         // Handle K8s API connection close
-        target.on('close', (code, reason) => {
+        target.on('close', (code, reason: string | Buffer) => {
           if (heartbeatInterval) {
             clearInterval(heartbeatInterval);
           }
+
+          const reasonString = typeof reason === 'string' ? reason : String(reason);
 
           fastify.log.info(
             {
               connectionId,
               code,
-              reason,
+              reason: reasonString,
               messagesReceived: metrics.messagesReceived,
               messagesSent: metrics.messagesSent,
               duration: Date.now() - metrics.created,
@@ -431,17 +440,19 @@ export default async (fastify: KubeFastifyInstance): Promise<void> => {
         );
 
         // Handle client connection close
-        source.on('close', (code, reason) => {
+        source.on('close', (code, reason: string | Buffer) => {
           if (heartbeatInterval) {
             clearInterval(heartbeatInterval);
           }
           clearTimeout(connectionTimeout);
 
+          const reasonString = typeof reason === 'string' ? reason : String(reason);
+
           fastify.log.debug(
             {
               connectionId,
               code,
-              reason,
+              reason: reasonString,
             },
             `Client websocket closed for ${kubeUri}`,
           );
