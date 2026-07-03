@@ -33,8 +33,13 @@
     ]
   },
   "dependencies": {
+    "@babel/core": "^7.29.6",
     "@odh-dashboard/app-config": "*",
-    "@odh-dashboard/plugin-core": "*"
+    "@odh-dashboard/plugin-core": "*",
+    "axios": "^1.16.0",
+    "dompurify": "^3.4.11",
+    "react-router": "^7.15.1",
+    "webpack-dev-server": "^5.2.5"
   },
   "devDependencies": {
     "@odh-dashboard/eslint-config": "*"
