@@ -34,7 +34,13 @@
   },
   "dependencies": {
     "@odh-dashboard/app-config": "*",
-    "@odh-dashboard/plugin-core": "*"
+    "@odh-dashboard/plugin-core": "*",
+    "axios": "^1.20.0",
+    "dompurify": "^3.4.14",
+    "react-router": "^7.18.3",
+    "react-router-dom": "^7.18.3",
+    "slnodejs": "^6.2.59",
+    "webpack-dev-server": "^5.2.6"
   },
   "devDependencies": {
     "@odh-dashboard/eslint-config": "*"
