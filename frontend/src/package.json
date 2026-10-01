@@ -33,8 +33,10 @@
     ]
   },
   "dependencies": {
+    "@module-federation/enhanced": "^2.9.2",
     "@odh-dashboard/app-config": "*",
-    "@odh-dashboard/plugin-core": "*"
+    "@odh-dashboard/plugin-core": "*",
+    "dompurify": "^3.4.16"
   },
   "devDependencies": {
     "@odh-dashboard/eslint-config": "*"
