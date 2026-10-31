@@ -37,7 +37,7 @@
     "test:cypress-ci": "npx concurrently -P -k -s first \"npm run cypress:server:dev\" \"npx wait-on http://localhost:8080 && npm run cypress:run:mock\" -- "
   },
   "devDependencies": {
-    "@module-federation/enhanced": "^0.13.1",
+    "@module-federation/enhanced": "^2.9.2",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@swc/core": "^1.9.1",
     "@types/jest": "^29.5.14",
@@ -104,7 +104,7 @@
     "@babel/preset-env": "^7.27.2",
     "@babel/preset-react": "^7.27.1",
     "@babel/preset-typescript": "^7.27.1",
-    "@cypress/code-coverage": "^3.14.1",
+    "@cypress/code-coverage": "^4.1.2",
     "@cypress/webpack-preprocessor": "^6.0.4",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
@@ -128,7 +128,7 @@
     "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.37.2",
     "eslint-plugin-react-hooks": "^5.0.0",
-    "junit-report-merger": "^7.0.1",
+    "junit-report-merger": "^9.0.4",
     "serve": "^14.2.5",
     "ts-jest": "^29.2.5"
   },
